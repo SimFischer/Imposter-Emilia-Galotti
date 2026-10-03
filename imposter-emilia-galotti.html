@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Imposter – Emilia Galotti</title>
+<style>
+  :root {
+    --wand: #29231f;          /* dunkle Wand, an der der Zettel hängt */
+    --papier: #e9dfc6;        /* Hadernpapier */
+    --karte: #f6efdc;         /* helleres Kartenpapier */
+    --tinte: #1f1915;         /* Druckerschwärze */
+    --tinte-leise: #4d4238;
+    --rose: #9d1f24;          /* die einzige Farbe auf dem Blatt */
+    --antiqua: "Baskerville", "Libre Baskerville", "GFS Baskerville", "Hoefler Text", Georgia, serif;
+  }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    padding: max(0.625rem, env(safe-area-inset-top)) 0.625rem 2rem;
+    background: var(--wand);
+    color: var(--tinte);
+    font-family: var(--antiqua);
+    font-size: 1.25rem;
+    line-height: 1.45;
+  }
+
+  /* ---------- Das Blatt ---------- */
+  .blatt {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 0.625rem;
+    background-color: var(--papier);
+    background-image:
+      radial-gradient(ellipse at 12% 6%, rgba(122, 88, 38, 0.16), transparent 46%),
+      radial-gradient(ellipse at 92% 96%, rgba(122, 88, 38, 0.18), transparent 50%),
+      radial-gradient(ellipse at 80% 20%, rgba(255, 250, 235, 0.35), transparent 40%),
+      url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22220%22 height=%22220%22%3E%3Cfilter id=%22n%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%222%22 seed=%227%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 0.36  0 0 0 0 0.26  0 0 0 0 0.12  0 0 0 0.55 -0.17%22/%3E%3C/filter%3E%3Crect width=%22220%22 height=%22220%22 filter=%22url%28%23n%29%22/%3E%3C/svg%3E");
+    box-shadow:
+      inset 0 0 70px rgba(110, 78, 30, 0.22),
+      0 2px 0 rgba(0, 0, 0, 0.4),
+      0 18px 40px -12px rgba(0, 0, 0, 0.7);
+  }
+  .rahmen {
+    border: 16px double var(--tinte);
+    border-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22 fill=%22%231f1915%22%3E%3Csvg x=%220%22 y=%220%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%2220%22 cy=%2210%22 r=%221.3%22/%3E%3Ccircle cx=%2210%22 cy=%2220%22 r=%221.3%22/%3E%3C/svg%3E%3Csvg x=%2220%22 y=%220%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%220%22 cy=%2210%22 r=%221.3%22/%3E%3Ccircle cx=%2220%22 cy=%2210%22 r=%221.3%22/%3E%3C/svg%3E%3Csvg x=%2240%22 y=%220%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%220%22 cy=%2210%22 r=%221.3%22/%3E%3Ccircle cx=%2210%22 cy=%2220%22 r=%221.3%22/%3E%3C/svg%3E%3Csvg x=%220%22 y=%2220%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%2210%22 cy=%220%22 r=%221.3%22/%3E%3Ccircle cx=%2210%22 cy=%2220%22 r=%221.3%22/%3E%3C/svg%3E%3Csvg x=%2240%22 y=%2220%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%2210%22 cy=%220%22 r=%221.3%22/%3E%3Ccircle cx=%2210%22 cy=%2220%22 r=%221.3%22/%3E%3C/svg%3E%3Csvg x=%220%22 y=%2240%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%2220%22 cy=%2210%22 r=%221.3%22/%3E%3Ccircle cx=%2210%22 cy=%220%22 r=%221.3%22/%3E%3C/svg%3E%3Csvg x=%2220%22 y=%2240%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%220%22 cy=%2210%22 r=%221.3%22/%3E%3Ccircle cx=%2220%22 cy=%2210%22 r=%221.3%22/%3E%3C/svg%3E%3Csvg x=%2240%22 y=%2240%22 width=%2220%22 height=%2220%22 viewBox=%220 0 20 20%22%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%2845 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28135 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28225 10 10%29%22/%3E%3Cpath d=%22M10 1.6C13.6 4.4 13.6 7.4 10 9.3C6.4 7.4 6.4 4.4 10 1.6z%22 transform=%22rotate%28315 10 10%29%22/%3E%3Ccircle cx=%2210%22 cy=%2210%22 r=%221.5%22 fill=%22%23e9dfc6%22/%3E%3Ccircle cx=%220%22 cy=%2210%22 r=%221.3%22/%3E%3Ccircle cx=%2210%22 cy=%220%22 r=%221.3%22/%3E%3C/svg%3E%3C/svg%3E") 20 / 16px round;
+    box-shadow: inset 0 0 0 1px var(--tinte);
+    padding: 1.5rem clamp(0.875rem, 5vw, 2.25rem) 2rem;
+  }
+
+  svg.rose { --r-blatt: var(--rose); --r-strich: var(--tinte); --r-kelch: var(--tinte); --r-mitte: var(--papier); }
+
+  /* ---------- Zettelkopf (nur auf der Startseite) ---------- */
+  .zettelkopf { text-align: center; margin-bottom: 1.75rem; }
+  .zettelkopf svg.rose { width: 4.5rem; height: 4.5rem; display: block; margin: 0 auto 0.75rem; }
+  .zettelkopf p { margin: 0; }
+  .z-kursiv { font-style: italic; font-size: 1.125rem; }
+  .zettelkopf h1 {
+    margin: 0.35rem 0 0.45rem;
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(1.7rem, 7.2vw, 2.9rem);
+    line-height: 1.1;
+  }
+  .z-kap { font-variant-caps: small-caps; letter-spacing: 0.09em; font-size: 1.125rem; }
+  .z-titel {
+    margin: 0.3rem 0 0.2rem !important;
+    font-size: clamp(2.3rem, 10vw, 4.4rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .z-autor { font-size: 1.25rem; }
+  .kap { font-variant-caps: small-caps; letter-spacing: 0.06em; }
+  .z-klein { font-style: italic; font-size: 1rem; color: var(--tinte-leise); }
+
+  /* Schwelllinie: in der Mitte dick, zu den Enden spitz */
+  .schwell {
+    width: min(15rem, 70%);
+    height: 5px;
+    margin: 1rem auto;
+    background: var(--tinte);
+    clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
+  }
+  /* fett-feine Doppellinie */
+  .fettfein {
+    height: 6px;
+    margin: 0 0 1.25rem;
+    background:
+      linear-gradient(var(--tinte), var(--tinte)) 0 0 / 100% 3px no-repeat,
+      linear-gradient(var(--tinte), var(--tinte)) 0 5px / 100% 1px no-repeat;
+  }
+
+  /* ---------- Kolumnentitel (auf den Spielseiten) ---------- */
+  .kolumne {
+    display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+    margin: -0.25rem 0 0.75rem;
+    font-size: 1.0625rem;
+  }
+  .kolumne svg.rose { width: 1.5rem; height: 1.5rem; flex: none; }
+  .kolumne p { margin: 0; font-variant-caps: small-caps; letter-spacing: 0.08em; }
+  body[data-schirm="start"] .kolumne,
+  body[data-schirm="start"] .kolumne + .fettfein,
+  body[data-schirm="spiel"] .zettelkopf,
+  body[data-schirm="spiel"] .kolophon { display: none; }
+
+  /* ---------- Text ---------- */
+  h2 {
+    margin: 0 0 0.25rem;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 2.25rem;
+    line-height: 1.15;
+    text-align: center;
+    text-wrap: balance;
+  }
+  h2:focus { outline: none; }
+  h2 + .schwell { margin: 0.6rem auto 1.1rem; }
+  p { margin: 0 0 1rem; }
+  .mittig { text-align: center; text-wrap: balance; }
+  .leise { color: var(--tinte-leise); font-size: 1.0625rem; }
+
+  /* ---------- Auswahlfelder ---------- */
+  fieldset { border: 0; padding: 0; margin: 0 0 1.4rem; min-width: 0; }
+  legend, .feld label {
+    display: block; width: 100%;
+    padding: 0;
+    margin-bottom: 0.45rem;
+    text-align: center;
+    font-variant-caps: small-caps;
+    letter-spacing: 0.08em;
+    font-size: 1.1875rem;
+  }
+  .wahl { display: flex; justify-content: center; gap: 0.5rem; }
+  .wahl label { position: relative; display: block; flex: 0 1 calc((100% - 2rem) / 5); }
+  .wahl input {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    margin: 0; opacity: 0; cursor: pointer;
+  }
+  .wahl span {
+    display: grid; place-items: center;
+    min-height: 3.5rem;
+    border: 1.5px solid var(--tinte);
+    box-shadow: inset 0 0 0 3px var(--karte), inset 0 0 0 4px rgba(31, 25, 21, 0.55);
+    background: var(--karte);
+    font-size: 1.75rem;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+  }
+  .wahl small { display: block; font-size: 0.8125rem; font-style: italic; margin-top: 0.15rem; }
+  .wahl input:checked + span {
+    background: var(--tinte); color: var(--karte);
+    box-shadow: inset 0 0 0 3px var(--tinte), inset 0 0 0 4px rgba(246, 239, 220, 0.6);
+  }
+  .wahl input:focus-visible + span { outline: 3px solid var(--tinte); outline-offset: 3px; }
+  .wahl input:disabled { cursor: default; }
+  .wahl input:disabled + span { opacity: 0.5; border-style: dashed; box-shadow: none; background: transparent; }
+
+  .feld { margin-bottom: 1.5rem; }
+  .feld .leise { margin: -0.15rem 0 0.6rem; text-align: center; font-style: italic; text-wrap: balance; }
+  .feld input {
+    width: 100%;
+    min-height: 3.5rem;
+    padding: 0.5rem 0.875rem;
+    border: 1.5px solid var(--tinte);
+    border-radius: 0;
+    box-shadow: inset 0 0 0 3px var(--karte), inset 0 0 0 4px rgba(31, 25, 21, 0.55);
+    background: var(--karte);
+    color: var(--tinte);
+    font-family: var(--antiqua);
+    font-size: 1.625rem;
+    text-align: center;
+    -webkit-appearance: none; appearance: none;
+  }
+  .feld input:focus-visible { outline: 3px solid var(--tinte); outline-offset: 3px; }
+
+  .fehler {
+    padding: 0.7rem 1rem;
+    border: 1.5px solid var(--tinte);
+    border-left-width: 8px;
+    background: var(--karte);
+  }
+
+  /* ---------- Knöpfe ---------- */
+  .knopf {
+    display: block; width: 100%;
+    min-height: 3.75rem;
+    padding: 0.7rem 1rem;
+    border: 1.5px solid var(--tinte);
+    border-radius: 0;
+    background: var(--tinte);
+    box-shadow: inset 0 0 0 3px var(--tinte), inset 0 0 0 4px rgba(246, 239, 220, 0.6);
+    color: var(--karte);
+    font-family: var(--antiqua);
+    font-size: 1.4375rem;
+    font-variant-caps: small-caps;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+  }
+  .knopf:disabled { opacity: 0.45; cursor: default; }
+  .knopf.zweit {
+    margin-top: 0.75rem;
+    min-height: 3.25rem;
+    background: transparent;
+    box-shadow: none;
+    color: var(--tinte);
+    font-size: 1.1875rem;
+  }
+  .knopf:focus-visible, .karte:focus-visible, .figuren button:focus-visible {
+    outline: 3px solid var(--tinte); outline-offset: 3px;
+  }
+
+  /* ---------- Personenverzeichnis und Kolophon ---------- */
+  .personen { margin-top: 2.25rem; text-align: center; }
+  .personen h2 { font-size: 1.75rem; }
+  .personen ul { list-style: none; margin: 0; padding: 0; font-size: 1.1875rem; line-height: 1.5; }
+  .personen li { font-variant-caps: small-caps; letter-spacing: 0.07em; }
+  .personen .leise { margin: 0.6rem 0 0; font-style: italic; }
+  .kolophon { margin: 1.75rem 0 0; text-align: center; font-style: italic; font-size: 1.0625rem; text-wrap: balance; }
+  .kolophon span { display: block; font-style: normal; font-size: 0.9375rem; color: var(--tinte-leise); margin-top: 0.15rem; }
+
+  /* ---------- Angaben über der Karte ---------- */
+  .angaben {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    margin: 0 0 0.75rem;
+    border-top: 1px solid var(--tinte);
+    border-bottom: 1px solid var(--tinte);
+    text-align: center;
+  }
+  .angaben div { padding: 0.45rem 0 0.5rem; }
+  .angaben div + div { border-left: 1px solid var(--tinte); }
+  .angaben dt { font-size: 1rem; font-variant-caps: small-caps; letter-spacing: 0.08em; color: var(--tinte-leise); }
+  .angaben dd { margin: 0; font-size: 2rem; line-height: 1.1; font-variant-numeric: lining-nums; }
+
+  /* ---------- Die Karte ---------- */
+  .karte {
+    display: block;
+    width: min(18rem, 100%);
+    aspect-ratio: 5 / 7;
+    margin: 1.5rem auto 0.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    perspective: 60rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .karte-innen {
+    position: relative; display: block; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+  }
+  .karte[aria-pressed="true"] .karte-innen { transform: rotateY(180deg); }
+  .seite {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    border-radius: 10px;
+    box-shadow: 0 1px 0 rgba(31, 25, 21, 0.5), 0 16px 26px -14px rgba(31, 25, 21, 0.85);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  .rueck {
+    background:
+      repeating-linear-gradient(45deg, transparent 0 11px, rgba(233, 223, 198, 0.34) 11px 12px),
+      repeating-linear-gradient(-45deg, transparent 0 11px, rgba(233, 223, 198, 0.34) 11px 12px),
+      var(--tinte);
+    border: 9px solid var(--karte);
+    opacity: 1;
+    transition: opacity 0s 0.25s;
+  }
+  .rueck .schild {
+    display: grid; place-items: center;
+    width: 58%; aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--tinte);
+    border: 1px solid rgba(233, 223, 198, 0.6);
+    box-shadow: 0 0 0 5px var(--tinte), 0 0 0 6px rgba(233, 223, 198, 0.6);
+  }
+  .rueck svg.rose { width: 72%; height: 72%; --r-strich: var(--karte); --r-kelch: var(--karte); --r-mitte: var(--tinte); }
+  .vorder {
+    background: var(--karte);
+    transform: rotateY(180deg);
+    opacity: 0;
+    transition: opacity 0s 0.25s;
+  }
+  .vorder::before {
+    content: "";
+    position: absolute; inset: 9px;
+    border: 2px solid var(--tinte);
+    box-shadow: inset 0 0 0 3px var(--karte), inset 0 0 0 4px var(--tinte);
+    pointer-events: none;
+  }
+  .karte[aria-pressed="true"] .rueck { opacity: 0; }
+  .karte[aria-pressed="true"] .vorder { opacity: 1; }
+
+  .ecke { position: absolute; font-size: 1.75rem; line-height: 1; font-variant-numeric: lining-nums; }
+  .ecke.oben { top: 1.5rem; left: 1.625rem; }
+  .ecke.unten { bottom: 1.5rem; right: 1.625rem; transform: rotate(180deg); }
+  .mitte-k { display: block; padding: 0 1.6rem; text-align: center; }
+  .mitte-k .klein { display: block; font-size: 1.0625rem; font-style: italic; color: var(--tinte-leise); line-height: 1.3; }
+  .mitte-k .name {
+    display: block;
+    margin: 0.55rem 0 0.2rem;
+    font-size: 2.5rem;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .mitte-k .schwell { display: block; width: 60%; height: 4px; margin: 0.7rem auto 0.8rem; }
+
+  .karten-hilfe { text-align: center; font-style: italic; margin-bottom: 1.5rem; text-wrap: balance; }
+
+  .regeln { margin: 0 0 1.75rem; padding: 0 0 0 1.5rem; }
+  .regeln li { margin-bottom: 0.4rem; padding-left: 0.3rem; }
+
+  /* ---------- Auflösung ---------- */
+  .urteil {
+    padding: 1rem 0;
+    margin-bottom: 1.25rem;
+    border-top: 1px solid var(--tinte);
+    border-bottom: 1px solid var(--tinte);
+    text-align: center;
+    text-wrap: balance;
+  }
+  .urteil p:last-child { margin-bottom: 0; }
+  .figuren { display: grid; gap: 0.5rem; margin: 0 0 1rem; }
+  .figuren button {
+    min-height: 3.25rem;
+    padding: 0.5rem 1rem;
+    border: 1.5px solid var(--tinte);
+    border-radius: 0;
+    background: var(--karte);
+    color: var(--tinte);
+    font-family: var(--antiqua);
+    font-size: 1.3125rem;
+    font-variant-caps: small-caps;
+    letter-spacing: 0.07em;
+    cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+  }
+  .figuren button:disabled { cursor: default; opacity: 0.45; }
+  .figuren button.gewaehlt { opacity: 1; background: var(--tinte); color: var(--karte); }
+  .figuren button.gesucht { opacity: 1; box-shadow: inset 0 0 0 3px var(--karte), inset 0 0 0 6px var(--rose); }
+  .figuren button.gesucht.gewaehlt { box-shadow: inset 0 0 0 3px var(--tinte), inset 0 0 0 6px var(--karte); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .karte-innen, .rueck, .vorder { transition: none; }
+  }
+</style>
+</head>
+<body data-schirm="start">
+
+<!-- Die Rose: einmal gezeichnet, mehrfach verwendet -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="rose" viewBox="-42 -42 84 84">
+    <g style="fill:var(--r-kelch)">
+      <path id="kelchblatt" d="M0-13 L-4.2-30 L0-40 L4.2-30 Z" transform="rotate(36)"/>
+      <use href="#kelchblatt" transform="rotate(72)"/>
+      <use href="#kelchblatt" transform="rotate(144)"/>
+      <use href="#kelchblatt" transform="rotate(216)"/>
+      <use href="#kelchblatt" transform="rotate(288)"/>
+    </g>
+    <g style="fill:var(--r-blatt);stroke:var(--r-strich);stroke-width:1.6;stroke-linejoin:round">
+      <path id="rosenblatt" d="M0-7 C-13-10 -19-25 -9.5-32.5 C-5-36 -0.5-33.5 0-30 C0.5-33.5 5-36 9.5-32.5 C19-25 13-10 0-7 Z"/>
+      <use href="#rosenblatt" transform="rotate(72)"/>
+      <use href="#rosenblatt" transform="rotate(144)"/>
+      <use href="#rosenblatt" transform="rotate(216)"/>
+      <use href="#rosenblatt" transform="rotate(288)"/>
+    </g>
+    <g style="fill:var(--r-blatt);stroke:var(--r-strich);stroke-width:2.6;stroke-linejoin:round" transform="rotate(36) scale(0.52)">
+      <use href="#rosenblatt"/>
+      <use href="#rosenblatt" transform="rotate(72)"/>
+      <use href="#rosenblatt" transform="rotate(144)"/>
+      <use href="#rosenblatt" transform="rotate(216)"/>
+      <use href="#rosenblatt" transform="rotate(288)"/>
+    </g>
+    <circle style="fill:var(--r-mitte);stroke:var(--r-strich);stroke-width:1.4" r="6"/>
+    <g style="fill:var(--r-strich)">
+      <circle r="1.1"/><circle cy="-3.2" r="0.9"/><circle cx="3" cy="-1" r="0.9"/><circle cx="1.9" cy="2.6" r="0.9"/>
+      <circle cx="-1.9" cy="2.6" r="0.9"/><circle cx="-3" cy="-1" r="0.9"/>
+    </g>
+  </symbol>
+</svg>
+
+<main class="blatt"><div class="rahmen">
+
+  <header class="zettelkopf">
+    <svg class="rose" aria-hidden="true" focusable="false"><use href="#rose"/></svg>
+    <p class="z-kursiv">Mit gnädigster Erlaubnis wird heute gegeben</p>
+    <h1>Wer ist der Imposter?</h1>
+    <p class="z-kap">Ein Verstellungsspiel in einem Aufzuge</p>
+    <p class="z-kursiv">zu dem Trauerspiel</p>
+    <p class="z-titel">Emilia Galotti.</p>
+    <p class="z-autor">von <span class="kap">Gotthold Ephraim Lessing</span>.</p>
+    <div class="schwell"></div>
+    <p class="z-klein">Zuerst aufgeführt zu Braunschweig, den 13. März 1772.</p>
+  </header>
+
+  <div class="kolumne">
+    <svg class="rose" aria-hidden="true" focusable="false"><use href="#rose"/></svg>
+    <p>Wer ist der Imposter?</p>
+    <svg class="rose" aria-hidden="true" focusable="false"><use href="#rose"/></svg>
+  </div>
+  <div class="fettfein"></div>
+
+  <!-- 1. Eingaben -->
+  <section id="start">
+    <p class="mittig">In eurer Gruppe kennen alle dieselbe Figur aus dem Stück, nur eine Person nicht. Findet heraus, wer blufft.</p>
+    <form id="formular" novalidate>
+      <fieldset>
+        <legend>Deine Gruppe</legend>
+        <div class="wahl" id="wahl-gruppe"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Wie viele seid ihr in der Gruppe?</legend>
+        <div class="wahl" id="wahl-groesse"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Deine Nummer</legend>
+        <div class="wahl" id="wahl-nummer"></div>
+      </fieldset>
+      <div class="feld">
+        <label for="code">Rundencode</label>
+        <p class="leise" id="code-hilfe">Das Wort, das eure Lehrkraft für diese Runde ansagt. Alle tippen dasselbe ein.</p>
+        <input id="code" type="text" aria-describedby="code-hilfe" maxlength="20"
+               autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      </div>
+      <p class="fehler" id="fehler" role="alert" hidden></p>
+      <button type="submit" class="knopf">Karte ziehen</button>
+    </form>
+
+    <div class="personen">
+      <h2>Personen</h2>
+      <div class="schwell"></div>
+      <ul id="personen"></ul>
+      <p class="leise">Eine von ihnen ist die Figur eurer Gruppe.</p>
+    </div>
+  </section>
+
+  <!-- 2. Karte -->
+  <section id="karte-schirm" hidden>
+    <h2 tabindex="-1">Deine Karte</h2>
+    <div class="schwell"></div>
+    <dl class="angaben">
+      <div><dt>Gruppe</dt><dd id="a-gruppe"></dd></div>
+      <div><dt>Nummer</dt><dd id="a-nummer"></dd></div>
+      <div><dt>Prüfzahl</dt><dd id="a-pruef"></dd></div>
+    </dl>
+    <p class="leise mittig">Die Prüfzahl muss bei allen in eurer Gruppe gleich sein. Wenn nicht, vergleicht eure Eingaben.</p>
+
+    <button type="button" class="karte" id="karte" aria-pressed="false" aria-label="Karte, verdeckt">
+      <span class="karte-innen">
+        <span class="seite rueck" aria-hidden="true">
+          <span class="schild"><svg class="rose" focusable="false"><use href="#rose"/></svg></span>
+        </span>
+        <span class="seite vorder" aria-hidden="true">
+          <span class="ecke oben" id="k-ecke-oben"></span>
+          <span class="mitte-k">
+            <span class="klein" id="k-oben"></span>
+            <span class="name" id="k-name"></span>
+            <span class="schwell"></span>
+            <span class="klein" id="k-unten"></span>
+          </span>
+          <span class="ecke unten" id="k-ecke-unten"></span>
+        </span>
+      </span>
+    </button>
+    <p class="leise karten-hilfe">Tippe auf die Karte, um sie aufzudecken. Noch einmal tippen verdeckt sie wieder.</p>
+
+    <div class="fettfein"></div>
+    <ol class="regeln">
+      <li>Nummer <span id="r-start"></span> beginnt, dann geht es reihum.</li>
+      <li>Jede Person sagt genau ein Wort zur Figur. Namen aus dem Stück sind tabu.</li>
+      <li>Nach zwei Durchgängen stimmt ihr ab.</li>
+    </ol>
+
+    <button type="button" class="knopf" id="zu-tipp">Zur Abstimmung</button>
+    <button type="button" class="knopf zweit" id="zu-start">Eingaben ändern</button>
+  </section>
+
+  <!-- 3. Abstimmung -->
+  <section id="tipp-schirm" hidden>
+    <h2 tabindex="-1">Abstimmung</h2>
+    <div class="schwell"></div>
+    <p class="mittig">Besprecht kurz euren Verdacht. Dann tippt jede Person für sich.</p>
+    <fieldset>
+      <legend>Mein Tipp</legend>
+      <div class="wahl" id="wahl-tipp"></div>
+    </fieldset>
+    <button type="button" class="knopf" id="aufloesen" disabled>Auflösen</button>
+    <p class="leise mittig" style="margin-top:0.75rem">Erst auflösen, wenn alle in eurer Gruppe getippt haben.</p>
+    <button type="button" class="knopf zweit" id="zu-karte">Zurück zur Karte</button>
+  </section>
+
+  <!-- 4. Auflösung -->
+  <section id="ende-schirm" hidden>
+    <h2 tabindex="-1" id="e-titel"></h2>
+    <div class="schwell"></div>
+    <div class="urteil"><p id="e-urteil"></p><p id="e-zusatz"></p></div>
+    <div id="e-raten" hidden>
+      <p class="mittig">Deine letzte Chance: Welche Figur war gesucht?</p>
+      <div class="figuren" id="e-figuren"></div>
+      <p class="mittig" id="e-raten-ergebnis" role="status"></p>
+    </div>
+    <p class="leise mittig">Für das Gespräch gleich: Welches Wort hat die Figur am besten getroffen?</p>
+    <button type="button" class="knopf" id="neu">Neue Runde</button>
+  </section>
+
+  <p class="kolophon">»Eine Rose gebrochen, ehe der Sturm sie entblättert.«<span>Emilia, im fünften Aufzug</span></p>
+
+</div></main>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- Inhalt: hier lassen sich Figuren ergänzen oder ändern ----------
+  var FIGUREN = [
+    'Emilia Galotti',
+    'Odoardo Galotti',
+    'Claudia Galotti',
+    'Der Prinz',
+    'Marinelli',
+    'Gräfin Orsina',
+    'Graf Appiani'
+  ];
+  var GRUPPEN = ['A', 'B', 'C', 'D', 'E'];
+  var GROESSEN = [3, 4, 5];
+
+  // ---------- Verteilung: rechnet auf jedem Gerät dasselbe aus ----------
+  function hash(text) {
+    var h = 2166136261;
+    for (var i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    h ^= h >>> 16; h = Math.imul(h, 2246822507);
+    h ^= h >>> 13; h = Math.imul(h, 3266489909);
+    h ^= h >>> 16;
+    return h >>> 0;
+  }
+  function zufall(saat) {
+    var a = saat >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function mischen(anzahl, saat) {
+    var liste = [], r = zufall(saat), i, j, tmp;
+    for (i = 0; i < anzahl; i++) liste.push(i);
+    for (i = anzahl - 1; i > 0; i--) {
+      j = Math.floor(r() * (i + 1));
+      tmp = liste[i]; liste[i] = liste[j]; liste[j] = tmp;
+    }
+    return liste;
+  }
+  function normal(code) {
+    return String(code).trim().toLowerCase().replace(/\s+/g, '');
+  }
+  function runde(gruppe, groesse, code) {
+    var c = normal(code);
+    var reihenfolge = mischen(FIGUREN.length, hash('figur|' + c));
+    var g = GRUPPEN.indexOf(gruppe);
+    return {
+      figur: FIGUREN[reihenfolge[g % FIGUREN.length]],   // jede Gruppe eine andere Figur
+      imposter: hash('imposter|' + c + '|' + gruppe) % groesse + 1,
+      start: hash('start|' + c + '|' + gruppe) % groesse + 1,
+      pruef: hash('pruef|' + c + '|' + gruppe + '|' + groesse) % 90 + 10
+    };
+  }
+  window.__imposter = { runde: runde, FIGUREN: FIGUREN };  // nur zum Testen
+
+  // ---------- Oberfläche ----------
+  var $ = function (id) { return document.getElementById(id); };
+  var stand = { gruppe: null, groesse: 4, nummer: null, code: '', spiel: null, tipp: null };
+
+  try {
+    var alt = JSON.parse(sessionStorage.getItem('imposter-eingaben') || 'null');
+    if (alt) { stand.gruppe = alt.gruppe; stand.groesse = alt.groesse || 4; stand.nummer = alt.nummer; }
+  } catch (e) { /* ohne Speicher geht es auch */ }
+
+  function merken() {
+    try {
+      sessionStorage.setItem('imposter-eingaben', JSON.stringify(
+        { gruppe: stand.gruppe, groesse: stand.groesse, nummer: stand.nummer }));
+    } catch (e) { /* egal */ }
+  }
+
+  function baueWahl(ziel, name, werte, aktuell, bei, extra) {
+    ziel.textContent = '';
+    werte.forEach(function (wert) {
+      var label = document.createElement('label');
+      var input = document.createElement('input');
+      var span = document.createElement('span');
+      input.type = 'radio'; input.name = name; input.value = wert;
+      input.checked = String(wert) === String(aktuell);
+      span.textContent = wert;
+      if (extra) extra(wert, input, span);
+      input.addEventListener('change', function () { bei(wert); });
+      label.appendChild(input); label.appendChild(span);
+      ziel.appendChild(label);
+    });
+  }
+
+  function baueNummern() {
+    var werte = [];
+    for (var i = 1; i <= stand.groesse; i++) werte.push(i);
+    if (stand.nummer > stand.groesse) stand.nummer = null;
+    baueWahl($('wahl-nummer'), 'nummer', werte, stand.nummer, function (w) { stand.nummer = w; });
+  }
+
+  function zeige(id) {
+    ['start', 'karte-schirm', 'tipp-schirm', 'ende-schirm'].forEach(function (s) {
+      $(s).hidden = s !== id;
+    });
+    document.body.setAttribute('data-schirm', id === 'start' ? 'start' : 'spiel');
+    window.scrollTo(0, 0);
+    var titel = $(id).querySelector('h2[tabindex]');
+    if (titel) titel.focus({ preventScroll: true });
+  }
+
+  function karteSetzen(offen) {
+    var k = $('karte');
+    k.setAttribute('aria-pressed', offen ? 'true' : 'false');
+    k.setAttribute('aria-label', offen
+      ? 'Karte, offen: ' + $('k-oben').textContent + ' ' + $('k-name').textContent + '. ' + $('k-unten').textContent
+      : 'Karte, verdeckt');
+  }
+
+  // Personenverzeichnis
+  FIGUREN.forEach(function (figur) {
+    var li = document.createElement('li');
+    li.textContent = figur;
+    $('personen').appendChild(li);
+  });
+
+  // Eingaben
+  baueWahl($('wahl-gruppe'), 'gruppe', GRUPPEN, stand.gruppe, function (w) { stand.gruppe = w; });
+  baueWahl($('wahl-groesse'), 'groesse', GROESSEN, stand.groesse, function (w) { stand.groesse = w; baueNummern(); });
+  baueNummern();
+
+  $('formular').addEventListener('submit', function (ereignis) {
+    ereignis.preventDefault();
+    var fehler = $('fehler');
+    var code = normal($('code').value);
+    var meldung = '';
+    if (!stand.gruppe) meldung = 'Wähle zuerst deine Gruppe.';
+    else if (!stand.nummer) meldung = 'Wähle deine Nummer in der Gruppe.';
+    else if (!code) meldung = 'Gib den Rundencode ein, den eure Lehrkraft angesagt hat.';
+    if (meldung) { fehler.textContent = meldung; fehler.hidden = false; return; }
+    fehler.hidden = true;
+
+    stand.code = code;
+    stand.tipp = null;
+    stand.spiel = runde(stand.gruppe, stand.groesse, code);
+    merken();
+
+    var binImposter = stand.spiel.imposter === stand.nummer;
+    $('a-gruppe').textContent = stand.gruppe;
+    $('a-nummer').textContent = stand.nummer;
+    $('a-pruef').textContent = stand.spiel.pruef;
+    $('k-ecke-oben').textContent = stand.nummer;
+    $('k-ecke-unten').textContent = stand.nummer;
+    $('k-oben').textContent = binImposter ? 'Du bist' : 'Eure Figur';
+    $('k-name').textContent = binImposter ? 'Imposter' : stand.spiel.figur;
+    $('k-unten').textContent = binImposter
+      ? 'Du kennst die Figur nicht. Hör gut zu und bluffe.'
+      : 'Eine Person kennt sie nicht. Verrate nicht zu viel.';
+    $('r-start').textContent = stand.spiel.start;
+    karteSetzen(false);
+    zeige('karte-schirm');
+  });
+
+  // Karte
+  $('karte').addEventListener('click', function () {
+    karteSetzen(this.getAttribute('aria-pressed') !== 'true');
+  });
+  $('zu-start').addEventListener('click', function () { karteSetzen(false); zeige('start'); });
+  $('zu-tipp').addEventListener('click', function () {
+    karteSetzen(false);
+    var werte = [];
+    for (var i = 1; i <= stand.groesse; i++) werte.push(i);
+    baueWahl($('wahl-tipp'), 'tipp', werte, stand.tipp,
+      function (w) { stand.tipp = w; $('aufloesen').disabled = false; },
+      function (wert, input, span) {
+        if (wert === stand.nummer) {
+          input.disabled = true;
+          var du = document.createElement('small');
+          du.textContent = 'du';
+          span.appendChild(du);
+        }
+      });
+    $('aufloesen').disabled = !stand.tipp;
+    zeige('tipp-schirm');
+  });
+
+  // Abstimmung
+  $('zu-karte').addEventListener('click', function () { zeige('karte-schirm'); });
+  $('aufloesen').addEventListener('click', function () {
+    var s = stand.spiel;
+    var binImposter = s.imposter === stand.nummer;
+    $('e-raten').hidden = !binImposter;
+    $('e-raten-ergebnis').textContent = '';
+
+    if (binImposter) {
+      $('e-titel').textContent = 'Du warst der Imposter';
+      $('e-urteil').textContent = 'Hat die Mehrheit auf Nummer ' + stand.nummer + ' getippt, bist du enttarnt.';
+      $('e-zusatz').textContent = 'Wenn du jetzt die Figur errätst, gewinnst du trotzdem.';
+      var liste = $('e-figuren');
+      liste.textContent = '';
+      FIGUREN.forEach(function (figur) {
+        var knopf = document.createElement('button');
+        knopf.type = 'button';
+        knopf.textContent = figur;
+        knopf.addEventListener('click', function () {
+          Array.prototype.forEach.call(liste.children, function (k) {
+            k.disabled = true;
+            if (k.textContent === s.figur) k.classList.add('gesucht');
+          });
+          knopf.classList.add('gewaehlt');
+          $('e-raten-ergebnis').textContent = figur === s.figur
+            ? 'Richtig. Gesucht war ' + s.figur + '.'
+            : 'Daneben. Gesucht war ' + s.figur + '.';
+        });
+        liste.appendChild(knopf);
+      });
+    } else {
+      $('e-titel').textContent = 'Der Imposter war Nummer ' + s.imposter;
+      $('e-urteil').textContent = stand.tipp === s.imposter
+        ? 'Dein Tipp, Nummer ' + stand.tipp + ', war richtig.'
+        : 'Dein Tipp war Nummer ' + stand.tipp + '. Das war daneben.';
+      $('e-zusatz').textContent = 'Nummer ' + s.imposter +
+        ' darf jetzt noch die Figur raten. Nennt sie bis dahin nicht laut.';
+    }
+    zeige('ende-schirm');
+  });
+
+  // Neue Runde
+  $('neu').addEventListener('click', function () {
+    $('code').value = '';
+    stand.spiel = null; stand.tipp = null;
+    zeige('start');
+    $('code').focus();
+  });
+})();
+</script>
+</body>
+</html>
