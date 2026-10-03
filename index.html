@@ -283,11 +283,13 @@
     cursor: pointer;
     perspective: 60rem;
     -webkit-tap-highlight-color: transparent;
+    --dreh: 0.22s;
   }
+  .karte[aria-pressed="true"] { --dreh: 0.4s; }
   .karte-innen {
     position: relative; display: block; width: 100%; height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.5s ease;
+    transition: transform var(--dreh) ease;
   }
   .karte[aria-pressed="true"] .karte-innen { transform: rotateY(180deg); }
   .seite {
@@ -305,7 +307,7 @@
       var(--tinte);
     border: 9px solid var(--karte);
     opacity: 1;
-    transition: opacity 0s 0.25s;
+    transition: opacity 0s calc(var(--dreh) / 2);
   }
   .rueck .schild {
     display: grid; place-items: center;
@@ -320,7 +322,7 @@
     background: var(--karte);
     transform: rotateY(180deg);
     opacity: 0;
-    transition: opacity 0s 0.25s;
+    transition: opacity 0s calc(var(--dreh) / 2);
   }
   .vorder::before {
     content: "";
@@ -459,9 +461,64 @@
 
     /* Abstimmung und Auflösung: eine ruhige Spalte in der Mitte */
     #tipp-schirm, #ende-schirm { max-width: 36rem; margin: 0 auto; }
+    #pin-schirm { max-width: 26rem; margin: 0 auto; }
+    .k-fuss .fettfein { margin-bottom: 0.75rem; }
+    #tipp-schirm fieldset, #tipp-schirm .feld { margin-bottom: 1rem; }
+    .leitung-oben { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 2.25rem; align-items: start; }
   }
 
   .z-klein { font-variant-numeric: oldstyle-nums; }
+
+  /* ---------- Vertiefung und Freigabe ---------- */
+  .regeln-titel {
+    margin: 0 0 0.4rem; text-align: center;
+    font-variant-caps: small-caps; letter-spacing: 0.08em; font-size: 1.1875rem;
+  }
+  .regeln.eng { font-size: 1.0625rem; line-height: 1.35; }
+  .regeln.eng li { margin-bottom: 0.25rem; }
+  .feld input { font-variant-numeric: lining-nums; }
+  .geheim { -webkit-text-security: disc; letter-spacing: 0.3em; }
+
+  /* ---------- Spielleitung ---------- */
+  .rahmen { position: relative; }
+  .leitung-link {
+    position: absolute; right: 0.35rem; bottom: 0;
+    margin: 0; font-size: 0.8125rem; line-height: 1;
+  }
+  .leitung-link a {
+    display: block; padding: 0.55rem 0.5rem 0.3rem;
+    color: var(--tinte-leise); text-decoration: none;
+    font-variant-caps: small-caps; letter-spacing: 0.08em;
+  }
+  .leitung-link a:focus-visible { outline: 3px solid var(--tinte); outline-offset: -2px; }
+  body[data-schirm="spiel"] .leitung-link { display: none; }
+
+  .angaben.zwei { grid-template-columns: 1fr 1fr; }
+  .angaben.zwei dd { overflow-wrap: anywhere; padding: 0 0.4rem; -webkit-user-select: text; user-select: text; }
+  .schalter label { flex: 1 1 100%; }
+  .schalter span { font-size: 1.3125rem; font-variant-caps: small-caps; letter-spacing: 0.07em; }
+  .leitung-gruppen {
+    display: grid; gap: 0.75rem; margin: 1.25rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  }
+  .l-gruppe {
+    padding: 0.7rem 0.85rem 0.85rem;
+    border: 1.5px solid var(--tinte);
+    background: var(--karte);
+    box-shadow: inset 0 0 0 3px var(--karte), inset 0 0 0 4px rgba(31, 25, 21, 0.55);
+  }
+  .l-kopf { display: flex; align-items: baseline; gap: 0.7rem; margin: 0 0 0.5rem; }
+  .l-buchstabe { flex: none; font-size: 2.1rem; line-height: 1; }
+  .l-figur { font-size: 1.5rem; line-height: 1.15; }
+  .l-gruppe .angaben { margin: 0 0 0.6rem; }
+  .l-gruppe .angaben dt { font-size: 0.9375rem; letter-spacing: 0.05em; }
+  .l-gruppe .angaben dd { font-size: 1.75rem; }
+  .l-gruppe .l-klein {
+    margin: 0 0 0.3rem; text-align: center; color: var(--tinte-leise);
+    font-variant-caps: small-caps; letter-spacing: 0.08em; font-size: 0.9375rem;
+  }
+  .l-gruppe .wahl span { min-height: 2.5rem; font-size: 1.25rem; background: transparent; box-shadow: none; }
+  .l-gruppe .wahl input:checked + span { background: var(--tinte); color: var(--karte); }
 
   @media (prefers-reduced-motion: reduce) {
     .knopf, .figuren button, .wahl span { transition: none; }
@@ -592,16 +649,13 @@
         </span>
       </span>
     </button>
-    <p class="leise karten-hilfe">Tippe auf die Karte, um sie aufzudecken. Noch einmal tippen verdeckt sie wieder.</p>
+    <p class="leise karten-hilfe">Halte die Karte gedrückt, um sie zu sehen. Beim Loslassen dreht sie sich wieder um.</p>
     </div>
 
     <div class="k-fuss">
     <div class="fettfein"></div>
-    <ol class="regeln">
-      <li>Nummer <span id="r-start"></span> beginnt, dann geht es reihum.</li>
-      <li>Jede Person sagt genau ein Wort zur Figur. Namen aus dem Stück sind tabu.</li>
-      <li>Nach zwei Durchgängen stimmt ihr ab.</li>
-    </ol>
+    <p class="regeln-titel" id="r-titel" hidden>Vertiefung</p>
+    <ol class="regeln" id="regeln"></ol>
 
     <button type="button" class="knopf" id="zu-tipp">Zur Abstimmung</button>
     <button type="button" class="knopf zweit" id="zu-start">Eingaben ändern</button>
@@ -617,8 +671,14 @@
       <legend>Mein Tipp</legend>
       <div class="wahl" id="wahl-tipp"></div>
     </fieldset>
+    <div class="feld">
+      <label for="freigabe">Freigabezahl</label>
+      <p class="leise" id="freigabe-hilfe">Eure Lehrkraft sagt sie an, sobald alle Gruppen getippt haben.</p>
+      <input id="freigabe" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3"
+             autocomplete="off" aria-describedby="freigabe-hilfe" enterkeyhint="done">
+    </div>
+    <p class="fehler" id="tipp-fehler" role="alert" hidden></p>
     <button type="button" class="knopf" id="aufloesen" disabled>Auflösen</button>
-    <p class="leise mittig" style="margin-top:0.75rem">Erst auflösen, wenn alle in eurer Gruppe getippt haben.</p>
     <button type="button" class="knopf zweit" id="zu-karte">Zurück zur Karte</button>
   </section>
 
@@ -636,7 +696,56 @@
     <button type="button" class="knopf" id="neu">Neue Runde</button>
   </section>
 
+  <!-- 5. Spielleitung: PIN -->
+  <section id="pin-schirm" hidden>
+    <h2 tabindex="-1">Spielleitung</h2>
+    <div class="schwell"></div>
+    <form id="pin-formular" novalidate>
+      <div class="feld">
+        <label for="pin">PIN</label>
+        <p class="leise" id="pin-hilfe">Dieser Bereich ist für die Lehrkraft.</p>
+        <input id="pin" class="geheim" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8"
+               autocomplete="off" aria-describedby="pin-hilfe" enterkeyhint="go">
+      </div>
+      <p class="fehler" id="pin-fehler" role="alert" hidden>Die PIN stimmt nicht.</p>
+      <button type="submit" class="knopf">Öffnen</button>
+      <button type="button" class="knopf zweit" id="pin-zurueck">Zurück zum Spiel</button>
+    </form>
+  </section>
+
+  <!-- 6. Spielleitung: Übersicht -->
+  <section id="leitung-schirm" hidden>
+    <h2 tabindex="-1">Spielleitung</h2>
+    <div class="schwell"></div>
+    <p class="leise mittig">Nur für dich. Zeige diese Seite nicht über den Beamer.</p>
+    <div class="leitung-oben">
+      <div class="feld">
+        <label for="l-code">Rundencode</label>
+        <p class="leise" id="l-code-hilfe">Denk dir für jede Runde ein neues Wort aus.</p>
+        <input id="l-code" type="text" aria-describedby="l-code-hilfe" maxlength="19"
+               autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      </div>
+      <fieldset>
+        <legend>Vertiefung</legend>
+        <p class="leise mittig" style="font-style:italic;margin:-0.15rem 0 0.6rem">Erster Durchgang Adjektive, zweiter Verben. Standes- und Familienwörter sind tabu.</p>
+        <div class="wahl schalter">
+          <label><input type="checkbox" id="l-vertiefung"><span id="l-vertiefung-text">Einschalten</span></label>
+        </div>
+      </fieldset>
+    </div>
+    <div id="l-ergebnis" hidden>
+      <dl class="angaben zwei">
+        <div><dt>Diesen Code ansagen</dt><dd id="l-ansage"></dd></div>
+        <div><dt>Freigabezahl</dt><dd id="l-freigabe"></dd></div>
+      </dl>
+      <p class="leise mittig" id="l-hinweis"></p>
+      <div class="leitung-gruppen" id="l-gruppen"></div>
+    </div>
+    <button type="button" class="knopf" id="l-schliessen">Schließen und sperren</button>
+  </section>
+
   <p class="kolophon">»Eine Rose gebrochen, ehe der Sturm sie entblättert.«<span>Emilia, im fünften Aufzug</span></p>
+  <p class="leitung-link"><a href="#spielleitung" id="zu-leitung">Spielleitung</a></p>
 
 </div></main>
 
@@ -698,10 +807,13 @@
       figur: FIGUREN[reihenfolge[g % FIGUREN.length]],   // jede Gruppe eine andere Figur
       imposter: hash('imposter|' + c + '|' + gruppe) % groesse + 1,
       start: hash('start|' + c + '|' + gruppe) % groesse + 1,
-      pruef: hash('pruef|' + c + '|' + gruppe + '|' + groesse) % 90 + 10
+      pruef: hash('pruef|' + c + '|' + gruppe + '|' + groesse) % 90 + 10,
+      freigabe: hash('freigabe|' + c) % 900 + 100,      // gilt für alle Gruppen der Runde
+      vertiefung: /\+$/.test(c)                        // Code endet auf +: Vertiefung
     };
   }
   window.__imposter = { runde: runde, FIGUREN: FIGUREN };  // nur zum Testen
+  var PIN_HASH = 2266037209;   // die PIN selbst steht nicht im Quelltext
 
   // ---------- Oberfläche ----------
   var $ = function (id) { return document.getElementById(id); };
@@ -743,13 +855,39 @@
   }
 
   function zeige(id) {
-    ['start', 'karte-schirm', 'tipp-schirm', 'ende-schirm'].forEach(function (s) {
+    ['start', 'karte-schirm', 'tipp-schirm', 'ende-schirm', 'pin-schirm', 'leitung-schirm'].forEach(function (s) {
       $(s).hidden = s !== id;
     });
     document.body.setAttribute('data-schirm', id === 'start' ? 'start' : 'spiel');
     window.scrollTo(0, 0);
     var titel = $(id).querySelector('h2[tabindex]');
     if (titel) titel.focus({ preventScroll: true });
+  }
+
+  function regelnSetzen(spiel) {
+    var zeilen = ['Nummer ' + spiel.start + ' beginnt, dann geht es reihum.'];
+    if (spiel.vertiefung) {
+      zeilen.push('Erster Durchgang: ein Adjektiv. Wie ist die Figur?');
+      zeilen.push('Zweiter Durchgang: ein Verb. Was tut oder will sie?');
+      zeilen.push('Tabu: Namen, Standes- und Familienwörter (Graf, Prinz, Vater, Tochter …).');
+      zeilen.push('Danach stimmt ihr ab.');
+    } else {
+      zeilen.push('Jede Person sagt genau ein Wort zur Figur. Namen aus dem Stück sind tabu.');
+      zeilen.push('Nach zwei Durchgängen stimmt ihr ab.');
+    }
+    var liste = $('regeln');
+    liste.textContent = '';
+    zeilen.forEach(function (zeile) {
+      var li = document.createElement('li');
+      li.textContent = zeile;
+      liste.appendChild(li);
+    });
+    $('r-titel').hidden = !spiel.vertiefung;
+    liste.classList.toggle('eng', spiel.vertiefung);
+  }
+
+  function tippPruefen() {
+    $('aufloesen').disabled = !(stand.tipp && $('freigabe').value.replace(/\D/g, '').length === 3);
   }
 
   function karteSetzen(offen) {
@@ -787,6 +925,8 @@
 
     stand.code = code;
     stand.tipp = null;
+    $('freigabe').value = '';
+    $('tipp-fehler').hidden = true;
     stand.spiel = runde(stand.gruppe, stand.groesse, code);
     merken();
 
@@ -801,22 +941,39 @@
     $('k-unten').textContent = binImposter
       ? 'Du kennst die Figur nicht. Hör gut zu und bluffe.'
       : 'Eine Person kennt sie nicht. Verrate nicht zu viel.';
-    $('r-start').textContent = stand.spiel.start;
+    regelnSetzen(stand.spiel);
     karteSetzen(false);
     zeige('karte-schirm');
   });
 
   // Karte
-  $('karte').addEventListener('click', function () {
-    karteSetzen(this.getAttribute('aria-pressed') !== 'true');
+  // Die Karte ist nur sichtbar, solange sie gedrückt gehalten wird
+  var karte = $('karte'), karteZeit = null;
+  function karteHalten(offen) { clearTimeout(karteZeit); karteSetzen(offen); }
+  karte.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    try { karte.setPointerCapture(e.pointerId); } catch (x) { /* geht auch ohne */ }
+    karteHalten(true);
   });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (name) {
+    karte.addEventListener(name, function () { karteHalten(false); });
+  });
+  karte.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  // Tastatur und Vorlesehilfen können nicht halten: kurz zeigen, dann von selbst verdecken
+  karte.addEventListener('click', function (e) {
+    if (e.detail !== 0) return;
+    karteHalten(true);
+    karteZeit = setTimeout(function () { karteSetzen(false); }, 4000);
+  });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) karteHalten(false); });
+  window.addEventListener('blur', function () { karteHalten(false); });
   $('zu-start').addEventListener('click', function () { karteSetzen(false); zeige('start'); });
   $('zu-tipp').addEventListener('click', function () {
     karteSetzen(false);
     var werte = [];
     for (var i = 1; i <= stand.groesse; i++) werte.push(i);
     baueWahl($('wahl-tipp'), 'tipp', werte, stand.tipp,
-      function (w) { stand.tipp = w; $('aufloesen').disabled = false; },
+      function (w) { stand.tipp = w; tippPruefen(); },
       function (wert, input, span) {
         if (wert === stand.nummer) {
           input.disabled = true;
@@ -825,14 +982,24 @@
           span.appendChild(du);
         }
       });
-    $('aufloesen').disabled = !stand.tipp;
+    tippPruefen();
     zeige('tipp-schirm');
   });
 
   // Abstimmung
   $('zu-karte').addEventListener('click', function () { zeige('karte-schirm'); });
+  $('freigabe').addEventListener('input', function () {
+    $('tipp-fehler').hidden = true;
+    tippPruefen();
+  });
   $('aufloesen').addEventListener('click', function () {
     var s = stand.spiel;
+    if (parseInt($('freigabe').value.replace(/\D/g, ''), 10) !== s.freigabe) {
+      $('tipp-fehler').textContent = 'Die Freigabezahl stimmt nicht. Wartet auf die Ansage eurer Lehrkraft.';
+      $('tipp-fehler').hidden = false;
+      return;
+    }
+    $('tipp-fehler').hidden = true;
     var binImposter = s.imposter === stand.nummer;
     $('e-raten').hidden = !binImposter;
     $('e-raten-ergebnis').textContent = '';
@@ -878,6 +1045,140 @@
     merken();
     zeige('start');
     $('code').focus();
+  });
+
+  // ---------- Spielleitung ----------
+  var leitung = { offen: false, groessen: {} };
+  try {
+    leitung.offen = sessionStorage.getItem('imposter-leitung-offen') === '1';
+    leitung.groessen = JSON.parse(localStorage.getItem('imposter-leitung-groessen') || '{}') || {};
+  } catch (e) { /* ohne Speicher geht es auch */ }
+
+  function leitungZeichnen() {
+    var roh = normal($('l-code').value);
+    if (/\+$/.test(roh)) {                       // Pluszeichen getippt: Schalter übernimmt es
+      $('l-vertiefung').checked = true;
+      roh = roh.replace(/\++$/, '');
+      $('l-code').value = roh;
+    }
+    var an = $('l-vertiefung').checked;
+    var code = roh ? roh + (an ? '+' : '') : '';
+    $('l-vertiefung-text').textContent = an ? 'Eingeschaltet' : 'Einschalten';
+    try { sessionStorage.setItem('imposter-leitung-code', JSON.stringify({ code: roh, an: an })); } catch (e) { /* egal */ }
+    $('l-ergebnis').hidden = !code;
+    if (!code) return;
+
+    $('l-ansage').textContent = code;
+    $('l-freigabe').textContent = runde(GRUPPEN[0], GROESSEN[0], code).freigabe;
+    $('l-hinweis').textContent = (an
+      ? 'Das Pluszeichen am Ende gehört zum Code. Es schaltet auf allen Geräten die Vertiefung ein. '
+      : '') + 'Sag die Freigabezahl erst an, wenn alle Gruppen getippt haben.';
+
+    var ziel = $('l-gruppen');
+    ziel.textContent = '';
+    GRUPPEN.forEach(function (gruppe) {
+      var groesse = leitung.groessen[gruppe] || 4;
+      var r = runde(gruppe, groesse, code);
+      var kasten = document.createElement('div');
+      kasten.className = 'l-gruppe';
+
+      var kopf = document.createElement('p');
+      kopf.className = 'l-kopf';
+      var buchstabe = document.createElement('span');
+      buchstabe.className = 'l-buchstabe';
+      buchstabe.textContent = gruppe;
+      var figur = document.createElement('span');
+      figur.className = 'l-figur';
+      figur.textContent = r.figur;
+      kopf.appendChild(buchstabe); kopf.appendChild(figur);
+      kasten.appendChild(kopf);
+
+      var dl = document.createElement('dl');
+      dl.className = 'angaben';
+      [['Imposter', r.imposter], ['Beginnt', r.start], ['Prüfzahl', r.pruef]].forEach(function (paar) {
+        var div = document.createElement('div');
+        var dt = document.createElement('dt');
+        var dd = document.createElement('dd');
+        dt.textContent = paar[0]; dd.textContent = paar[1];
+        div.appendChild(dt); div.appendChild(dd);
+        dl.appendChild(div);
+      });
+      kasten.appendChild(dl);
+
+      var klein = document.createElement('p');
+      klein.className = 'l-klein';
+      klein.textContent = 'Gruppengröße';
+      kasten.appendChild(klein);
+      var wahl = document.createElement('div');
+      wahl.className = 'wahl';
+      baueWahl(wahl, 'l-groesse-' + gruppe, GROESSEN, groesse, function (w) {
+        leitung.groessen[gruppe] = w;
+        try { localStorage.setItem('imposter-leitung-groessen', JSON.stringify(leitung.groessen)); } catch (e) { /* egal */ }
+        leitungZeichnen();
+      });
+      kasten.appendChild(wahl);
+      ziel.appendChild(kasten);
+    });
+  }
+
+  function hashWeg() {
+    if (location.hash === '#spielleitung' && history.replaceState) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  }
+  function leitungOeffnen() {
+    karteSetzen(false);
+    if (!leitung.offen) {
+      $('pin').value = '';
+      $('pin-fehler').hidden = true;
+      zeige('pin-schirm');
+      $('pin').focus();
+      return;
+    }
+    try {
+      var alt = JSON.parse(sessionStorage.getItem('imposter-leitung-code') || 'null');
+      if (alt && !$('l-code').value) { $('l-code').value = alt.code || ''; $('l-vertiefung').checked = !!alt.an; }
+    } catch (e) { /* egal */ }
+    leitungZeichnen();
+    zeige('leitung-schirm');
+  }
+  function leitungSchliessen() {
+    hashWeg();
+    zeige(stand.spiel ? 'karte-schirm' : 'start');
+  }
+
+  $('zu-leitung').addEventListener('click', function (e) { e.preventDefault(); leitungOeffnen(); });
+  $('pin-formular').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (hash('pin|' + $('pin').value.trim()) !== PIN_HASH) {
+      $('pin-fehler').hidden = false;
+      $('pin').value = '';
+      $('pin').focus();
+      return;
+    }
+    $('pin').value = '';
+    leitung.offen = true;
+    try { sessionStorage.setItem('imposter-leitung-offen', '1'); } catch (x) { /* egal */ }
+    leitungOeffnen();
+  });
+  $('pin').addEventListener('input', function () { $('pin-fehler').hidden = true; });
+  $('pin-zurueck').addEventListener('click', leitungSchliessen);
+  $('l-code').addEventListener('input', leitungZeichnen);
+  $('l-vertiefung').addEventListener('change', leitungZeichnen);
+  $('l-schliessen').addEventListener('click', function () {
+    leitung.offen = false;
+    $('l-code').value = '';
+    $('l-vertiefung').checked = false;
+    try {
+      sessionStorage.removeItem('imposter-leitung-offen');
+      sessionStorage.removeItem('imposter-leitung-code');
+    } catch (e) { /* egal */ }
+    leitungSchliessen();
+  });
+  // Lesezeichen für die Lehrkraft: …/#spielleitung führt direkt zur PIN-Abfrage
+  if (location.hash === '#spielleitung') leitungOeffnen();
+  window.addEventListener('hashchange', function () {
+    if (location.hash === '#spielleitung') leitungOeffnen();
   });
 })();
 </script>
